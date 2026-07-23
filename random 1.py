@@ -3,30 +3,64 @@ import time
 
 
 def blackjack(penize):
+
+    def hodnota(karta):
+        if karta == "A":
+            return 11
+        elif karta in ["J", "Q", "K"]:
+            return 10
+        else:
+            return karta
+
     while True:
         dohromady = 0
         dohromadyd = 0
+        karty = ["A","A","A","A",2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,"J","J","J","J","Q","Q","Q","Q","K","K","K","K"]
+
         print(penize)
-        print("VITEJ V LACKJACKU\n")
+        print("VITEJ V BLACKJACKU\n")
+        time.sleep(0.5)
         sazka = float(input("Kolik chces vsadit?\n"))
+        time.sleep(0.5)
+        karta1 = random.choice(karty)
+        karty.remove(karta1)
+        dohromady += hodnota(karta1)
+        karta2 = random.choice(karty)
+        karty.remove(karta2)
+        dohromady += hodnota(karta2)
+        print("Padlo ti:",karta1,karta2,"\t dohromady mas:",dohromady)
         while True:
-            karta = random.randint(1, 10)
-            dohromady += karta
-            print("Padlo ti:", karta, "\tDohromady mas:", dohromady, "\n")
-            if dohromady > 21:
+            if dohromady > 21 or dohromadyd > 16:
                 break
-            else:
-                dalsi = input("1 pro kartu | 0 pro konec\n")
-                if dalsi == "0":
-                    break
-        if dohromady < 22:
-            while True:
-                kartad = random.randint(1, 10)
-                dohromadyd += kartad
-                print("Dealerovi padlo:", kartad, "\tDohromady ma:", dohromadyd, "\n")
-                time.sleep(1)
-                if dohromadyd > 18:
-                    break
+            hrat = input("STAND | HIT")
+            time.sleep(0.5)
+            match hrat:
+                case "HIT":
+                    karta = random.choice(karty)
+                    karty.remove(karta)
+                    dohromady += hodnota(karta)
+                    print("Padlo ti:", karta, "\tDohromady mas:", dohromady, "\n")
+                    time.sleep(0.5)
+
+                case "STAND":
+                    karta1 = random.choice(karty)
+                    karty.remove(karta1)
+                    dohromadyd += hodnota(karta1)
+                    karta2 = random.choice(karty)
+                    karty.remove(karta2)
+                    dohromadyd += hodnota(karta2)
+                    print("Dealerovi padlo:",karta1,karta2, "\tDohromady ma:", dohromadyd, "\n")
+                    time.sleep(0.5)
+                    if dohromadyd > 16:
+                        break
+                    while True:
+                        karta = random.choice(karty)
+                        karty.remove(karta)
+                        dohromadyd += hodnota(karta)
+                        print("Dealerovi padlo:", karta, "\tDohromady ma:", dohromadyd, "\n")
+                        time.sleep(0.5)
+                        if dohromadyd > 16:
+                            break
 
         if dohromady > 21:
             print("mas moc, PROHRAL SI\n")
@@ -43,21 +77,20 @@ def blackjack(penize):
             print("PROHRAL SI\n")
             penize -= sazka
             print(penize)
-        znova = input("1 pro znovu | 0 pro exit")
+        znova = input("1 pro znovu | 0 pro  exit")
         if znova == "0":
             break
     return penize
 
 
 penize = 1000
-konecm = 66
 while True:
     print(penize)
     print("VÍTEJ V CASINOPY")
-    hra = input("Co si chces zahrat?\t1 - Blackjack\n\t\t\t\t\t2 - KONEC\n")
+    hra = input("Co si chces zahrat?\t1 - Blackjack\n\t\t\t\t\t9 - KONEC\n")
     match hra:
         case "1": penize = blackjack(penize)
-        case "2": break
+        case "9": break
         case _:
             print("ahoj")
 
