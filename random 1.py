@@ -23,7 +23,7 @@ def blackjack(penize):
 
 
     while True:
-        print("\n" * 50)
+        os.system("cls")
         dohromady = 0
         dohromadyd = 0
         karty = ["A","A","A","A",2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,"J","J","J","J","Q","Q","Q","Q","K","K","K","K"]
@@ -36,10 +36,11 @@ def blackjack(penize):
         time.sleep(0.5)
         sazka = float(input("Kolik chces vsadit?\n"))
         if sazka > penize:
-            print("\n" * 50)
+            os.system("cls")
             print("Nedostatek penez")
             time.sleep(1)
             continue
+
         time.sleep(0.5)
         karta1 = random.choice(karty)
         karty.remove(karta1)
@@ -49,8 +50,18 @@ def blackjack(penize):
         ruka.append(karta1)
         ruka.append(karta2)
         dohromady = hodnota_ruky(ruka)
-        print("\n" * 50)
-        print("Padlo ti:",karta1,karta2,"\t dohromady mas:",dohromady)
+
+        rukad = []
+        kartad1 = random.choice(karty)
+        karty.remove(kartad1)
+        kartad2 = random.choice(karty)
+        karty.remove(kartad2)
+        rukad.append(kartad1)
+        rukad.append(kartad2)
+
+        os.system("cls")
+        print("Padlo ti:",karta1,karta2,"\t dohromady mas:",dohromady," | Dealerovi padlo:",kartad1," ???")
+        time.sleep(1)
         while True:
             if dohromady > 21 or dohromadyd > 16:
                 break
@@ -63,21 +74,14 @@ def blackjack(penize):
                     karty.remove(karta)
                     ruka.append(karta)
                     dohromady = hodnota_ruky(ruka)
-                    print("\n" * 50)
+                    os.system("cls")
                     print("Padlo ti:", karta, "\tDohromady mas:", dohromady, "\n")
                     time.sleep(1)
 
                 case "STAND":
-                    rukad = []
-                    karta1 = random.choice(karty)
-                    karty.remove(karta1)
-                    karta2 = random.choice(karty)
-                    karty.remove(karta2)
-                    rukad.append(karta1)
-                    rukad.append(karta2)
+                    os.system("cls")
                     dohromadyd = hodnota_ruky(rukad)
-                    print("\n" * 50)
-                    print("Dealerovi padlo:",karta1,karta2, "\tDohromady ma:", dohromadyd, "\n")
+                    print("Dealerovi padlo:",kartad1,kartad2, "\tDohromady ma:", dohromadyd, "\n")
                     time.sleep(2)
                     if dohromadyd > 16:
                         break
@@ -91,21 +95,26 @@ def blackjack(penize):
                         if dohromadyd > 16:
                             break
 
-        print("\n" * 50)
+        os.system("cls")
         if dohromady > 21:
             print("mas moc, PROHRAL SI\n")
             penize -= sazka
+            print(penize)
         elif dohromadyd > 21:
             print("VYHRAL SI - dealer bust\n")
             penize += sazka
+            print(penize)
         elif dohromady > dohromadyd:
             print("VYHRAL SI\n")
             penize += sazka
+            print(penize)
         elif dohromady == dohromadyd:
             print("REMIZA\n")
+            print(penize)
         else:
             print("PROHRAL SI\n")
             penize -= sazka
+            print(penize)
         znova = input("1 pro znovu | 0 pro  exit")
         if znova == "0":
             break
@@ -113,11 +122,11 @@ def blackjack(penize):
 
 
 penize = 1000
-print("\n" * 50)
+os.system("cls")
 while True:
     print(penize)
     print("VÍTEJ V CASINOPY")
-    hra = input("Co si chces zahrat?\t1 - Blackjack\n\t\t\t\t\t9 - KONEC\n")
+    hra = input("Co si chces zahrat?\t1 - Blackjack\n\t\t\t9 - KONEC\n")
     match hra:
         case "1": penize = blackjack(penize)
         case "9": break
