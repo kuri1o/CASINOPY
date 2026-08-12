@@ -5,6 +5,16 @@ import os
 
 def blackjack(penize):
 
+    def hrac(ruka,karty):
+        karta = random.choice(karty)
+        karty.remove(karta)
+        ruka.append(karta)
+        dohromady = hodnota_ruky(ruka)
+        os.system("cls")
+        print("Padlo ti:", karta, "\tDohromady mas:", dohromady, "\n")
+        time.sleep(1)
+        return dohromady
+
     def hodnota_ruky(ruka):
         soucet = 0
         esa = 0
@@ -21,11 +31,30 @@ def blackjack(penize):
             esa -= 1
         return soucet
 
+    def dealer(rukad,karty):
+        soucet = hodnota_ruky(rukad)
+        print("Dealerovi padlo:",*rukad, "\tDohromady ma:", soucet, "\n")
+        time.sleep(2)
+        while True:
+            soucet = hodnota_ruky(rukad)
+
+            if soucet >= 17:
+                return soucet
+
+            karta = random.choice(karty)
+            karty.remove(karta)
+            rukad.append(karta)
+
+            os.system("cls")
+            print("Dealerovi padlo:", karta,"\tDohromady ma:", soucet, "\n")
+            time.sleep(2)
+
 
     while True:
         os.system("cls")
         dohromady = 0
         dohromadyd = 0
+        kolo = 0
         karty = ["A","A","A","A",2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,"J","J","J","J","Q","Q","Q","Q","K","K","K","K"]
         if penize<1:
             print("jsi broke")
@@ -65,35 +94,36 @@ def blackjack(penize):
         while True:
             if dohromady > 21 or dohromadyd > 16:
                 break
-            hrat = input("STAND | HIT").upper()
+            if kolo == 0:
+                hrat = input("STAND | HIT | DOUBLE").upper()
+            else:
+                hrat = input("STAND | HIT").upper()
             time.sleep(0.5)
+            kolo += 1
             match hrat:
 
                 case "HIT":
-                    karta = random.choice(karty)
-                    karty.remove(karta)
-                    ruka.append(karta)
-                    dohromady = hodnota_ruky(ruka)
-                    os.system("cls")
-                    print("Padlo ti:", karta, "\tDohromady mas:", dohromady, "\n")
-                    time.sleep(1)
+                    dohromady = hrac(ruka,karty)
 
                 case "STAND":
                     os.system("cls")
-                    dohromadyd = hodnota_ruky(rukad)
-                    print("Dealerovi padlo:",kartad1,kartad2, "\tDohromady ma:", dohromadyd, "\n")
-                    time.sleep(2)
-                    if dohromadyd > 16:
+                    dohromadyd = dealer(rukad, karty)
+                    break
+
+                case "DOUBLE":
+                    if penize >= 2 * sazka:
+                        sazka *= 2
+                        os.system("cls")
+                        dohromady = hrac(ruka, karty)
+
+                        if dohromady <= 21:
+                            dohromadyd = dealer(rukad, karty)
                         break
-                    while True:
-                        karta = random.choice(karty)
-                        karty.remove(karta)
-                        rukad.append(karta)
-                        dohromadyd = hodnota_ruky(rukad)
-                        print("Dealerovi padlo:", karta, "\tDohromady ma:", dohromadyd, "\n")
-                        time.sleep(2)
-                        if dohromadyd > 16:
-                            break
+                    else:
+                        print("NEMAS DOSTATEK PENEZ NA DOUBLE")
+
+                case _:
+                    kolo -= 1
 
         os.system("cls")
         if dohromady > 21:
