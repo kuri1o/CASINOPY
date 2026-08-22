@@ -5,9 +5,13 @@ import os
 
 def blackjack(penize):
 
-    def hrac(ruka,karty):
+    def tahni_kartu(karty):
         karta = random.choice(karty)
         karty.remove(karta)
+        return karta
+
+    def hrac(ruka,karty):
+        karta = tahni_kartu(karty)
         ruka.append(karta)
         dohromady = hodnota_ruky(ruka)
         os.system("cls")
@@ -41,9 +45,9 @@ def blackjack(penize):
             if soucet >= 17:
                 return soucet
 
-            karta = random.choice(karty)
-            karty.remove(karta)
+            karta = tahni_kartu(karty)
             rukad.append(karta)
+            soucet = hodnota_ruky(rukad)
 
             os.system("cls")
             print("Dealerovi padlo:", karta,"\tDohromady ma:", soucet, "\n")
@@ -55,6 +59,7 @@ def blackjack(penize):
         dohromady = 0
         dohromadyd = 0
         kolo = 0
+        koloznova = 0
         karty = ["A","A","A","A",2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10,"J","J","J","J","Q","Q","Q","Q","K","K","K","K"]
         if penize<1:
             print("jsi broke")
@@ -71,28 +76,25 @@ def blackjack(penize):
             continue
 
         time.sleep(0.5)
-        karta1 = random.choice(karty)
-        karty.remove(karta1)
-        karta2 = random.choice(karty)
-        karty.remove(karta2)
         ruka = []
-        ruka.append(karta1)
-        ruka.append(karta2)
+        karta = tahni_kartu(karty)
+        ruka.append(karta)
+        karta = tahni_kartu(karty)
+        ruka.append(karta)
         dohromady = hodnota_ruky(ruka)
 
         rukad = []
-        kartad1 = random.choice(karty)
-        karty.remove(kartad1)
-        kartad2 = random.choice(karty)
-        karty.remove(kartad2)
-        rukad.append(kartad1)
-        rukad.append(kartad2)
+        karta1 = tahni_kartu(karty)
+        rukad.append(karta1)
+        karta = tahni_kartu(karty)
+        rukad.append(karta)
+
 
         os.system("cls")
-        print("Padlo ti:",karta1,karta2,"\t dohromady mas:",dohromady," | Dealerovi padlo:",kartad1," ???")
+        print("Padlo ti:",*ruka,"\t dohromady mas:",dohromady," | Dealerovi padlo:",karta1," ???")
         time.sleep(1)
         while True:
-            if dohromady > 21 or dohromadyd > 16:
+            if dohromady > 21:
                 break
             if kolo == 0:
                 hrat = input("STAND | HIT | DOUBLE").upper()
@@ -145,8 +147,17 @@ def blackjack(penize):
             print("PROHRAL SI\n")
             penize -= sazka
             print(penize)
-        znova = input("1 pro znovu | 0 pro  exit")
-        if znova == "0":
+        while koloznova == 0:
+            znova = input("1 pro znovu | 0 pro  exit")
+            match znova:
+                case "0":
+                    koloznova += 2
+                case "1":
+                    koloznova += 1
+                case _:
+                    koloznova = 0
+        os.system("cls")
+        if koloznova == 2:
             break
     return penize
 
